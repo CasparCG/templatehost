@@ -2,9 +2,9 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
-    <movie path="bin\CasparCGFramework-v.2.0.0.swf" />
+    <movie path="bin\CasparCGFramework.swc" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -80,13 +80,15 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>SubWCRev "$(ProjectDir)" "$(ProjectDir)/src/se/svt/caspar/Version.tmpl" "$(ProjectDir)/src/se/svt/caspar/Version.as"</preBuildCommand>
+  <preBuildCommand>GitWCRev "$(ProjectDir)" "$(ProjectDir)/src/se/svt/caspar/Version.tmpl" "$(ProjectDir)/src/se/svt/caspar/Version.as"
+"$(BaseDir)\Tools\swcbuild\swcbuild.exe" "$(ProjectPath)" "-compiler=$(CompilerPath)" "-debug=$(BuildConfig)" "-library=C:\Program Files (x86)\FlashDevelop\Library" -asdoc=true -keep-asdoc=false</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Default" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->
   <storage />

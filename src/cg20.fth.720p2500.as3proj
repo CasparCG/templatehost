@@ -80,7 +80,7 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>SubWCRev "$(ProjectDir)" "$(ProjectDir)/src/se/svt/caspar/Version.tmpl" "$(ProjectDir)/src/se/svt/caspar/Version.as"</preBuildCommand>
+  <preBuildCommand>GitWCRev "$(ProjectDir)" "$(ProjectDir)/src/se/svt/caspar/Version.tmpl" "$(ProjectDir)/src/se/svt/caspar/Version.as"</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
