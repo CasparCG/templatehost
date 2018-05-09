@@ -219,7 +219,7 @@ package se.svt.caspar
 		}
 		
 		/**
-		 * Redispatches any events recieved.
+		 * Redispatches any events received.
 		 */		
 		private function redispatchEvent(e:Event):void
 		{
