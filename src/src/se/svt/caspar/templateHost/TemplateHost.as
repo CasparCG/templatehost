@@ -744,7 +744,9 @@ package se.svt.caspar.templateHost
 		private function jsonToXml(data:String):String
 		{
 			try {
-				var obj:Object = JSON.parse(data);
+				var pattern:RegExp = /({(?:.*)})/g;
+				var result:Object = pattern.exec(data);
+				var obj:Object = JSON.parse(result[0]);
 			}
 			catch (e:Error) 
 			{
