@@ -7,7 +7,7 @@ package utils.string
 	{
 		s = replace(s, "&", "&amp;");
 		
-		s = replace(s, " ", "&nbsp;");
+		//s = replace(s, " ", "&nbsp;");
 		s = replace(s, "<", "&lt;");
 		s = replace(s, ">", "&gt;");
 		s = replace(s, "™", '&trade;');
