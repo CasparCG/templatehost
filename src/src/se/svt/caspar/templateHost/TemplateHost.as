@@ -53,6 +53,7 @@ package se.svt.caspar.templateHost
 	import se.svt.caspar.templateHost.externalCommands.StopCommand;
 	import se.svt.caspar.Version;
 	import utils.string.xmlEncode;
+	import utils.xml.isValidXML;
 
 	/**
 	 * ...
@@ -157,7 +158,10 @@ package se.svt.caspar.templateHost
 		{
 			//_legacyHost.Add(layer, templateName, playOnLoad, invoke, xmlData);
 			onCommandRecieved("@Add@" + layer);
-			xmlData = jsonToXml(xmlData);
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new AddCommand(layer, templateName, invoke, new XML(xmlData), new TemplateContext(_communicationManager, layer), this));
 			if (playOnLoad)
 			{
@@ -744,9 +748,7 @@ package se.svt.caspar.templateHost
 		private function jsonToXml(data:String):String
 		{
 			try {
-				var pattern:RegExp = /({(?:.*)})/g;
-				var result:Object = pattern.exec(data);
-				var obj:Object = JSON.parse(result[0]);
+				var obj:Object = JSON.parse(/{.*}/gs.exec(data));
 			}
 			catch (e:Error) 
 			{
