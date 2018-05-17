@@ -11,8 +11,8 @@
 ## Progress - Repository Updates
 - [x] Create a new repository at GitHub (CasparCG/templatehost)
 - [x] Create a README
-- [ ] Find latest version of the TemplateHost
-- [ ] Cleanup current project
+- [x] Find latest version of the TemplateHost
+- [x] Cleanup current project
 - [ ] Make sure it builds/works
 - [ ] Create a .gitignore
 - [ ] Update README
