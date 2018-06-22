@@ -38,7 +38,6 @@ package se.svt.caspar.templateHost
 	import flash.net.URLRequest;
 	import flash.system.System;
 	import flash.xml.XMLNode;
-	import flash.filters.BlurFilter;
 	import se.svt.caspar.CommunicationManager;
 	import se.svt.caspar.template.CasparTemplateEvent;
 	import se.svt.caspar.template.ICaspar2Template;
@@ -133,7 +132,7 @@ package se.svt.caspar.templateHost
 			this.addEventListener(CommandEvent.ON_ERROR, onTemplateHostError);
 			_externalCommandsBuffer.addEventListener(CommandEvent.DEBUG_MESSAGE, onDebugLog);
 
-			_templateContainer.filters = [new BlurFilter(0, 0, 0)];
+			_templateContainer.cacheAsBitmap = true;
 			addChild(_templateContainer);
 			
 			//Listen for uncaught errors
