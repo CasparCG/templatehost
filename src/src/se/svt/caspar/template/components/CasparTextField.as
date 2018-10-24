@@ -32,13 +32,15 @@ package se.svt.caspar.template.components
 	{ 
 		private var _textField:TextField;
 		private var _spacing:Number;
+		private var _kerning:Boolean;
 		//public static var description:String = "&lt;component name=&quot;SVTText&quot;&gt;&lt;property name=&quot;text&quot; type=&quot;string&quot; info=&quot;Texten som ska visas&quot; /&gt;&lt;/component&gt";
 			
-		public function CasparTextField(textField:TextField, spacing:Number) 
+		public function CasparTextField(textField:TextField, spacing:Number, kerning:Boolean = false) 
 		{			
 			_textField = textField;
 			_textField.text = "";
 			_spacing = spacing;
+			_kerning = kerning;
 			//ComponentDataBuffer.componentLoaded(_textField.name, this);
 		}
 		
@@ -47,6 +49,7 @@ package se.svt.caspar.template.components
 		{ 
 			var format:TextFormat = _textField.getTextFormat();
 			format.letterSpacing = _spacing;
+			format.kerning = _kerning;
 			_textField.text = xmlData.data.@value;
 			_textField.setTextFormat(format);
 		}
