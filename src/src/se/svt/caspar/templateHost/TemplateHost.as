@@ -52,6 +52,8 @@ package se.svt.caspar.templateHost
 	import se.svt.caspar.templateHost.externalCommands.SetDataCommand;
 	import se.svt.caspar.templateHost.externalCommands.StopCommand;
 	import se.svt.caspar.Version;
+	import utils.string.xmlEncode;
+	import utils.xml.isValidXML;
 
 	/**
 	 * ...
@@ -156,6 +158,10 @@ package se.svt.caspar.templateHost
 		{
 			//_legacyHost.Add(layer, templateName, playOnLoad, invoke, xmlData);
 			onCommandReceived("@Add@" + layer);
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new AddCommand(layer, templateName, invoke, new XML(xmlData), new TemplateContext(_communicationManager, layer), this));
 			if (playOnLoad)
 			{
@@ -203,6 +209,10 @@ package se.svt.caspar.templateHost
 		public function SetData(layers:Array, xmlData:String):void 
 		{
 			onCommandReceived("@SetData@" + layers.toString());
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new SetDataCommand(layers, new XML(xmlData), this));
 		}
 		
@@ -732,6 +742,28 @@ package se.svt.caspar.templateHost
 				}
 				catch (e:Error)	{ }
 			}
+		}
+		
+		/**
+		 * Converts JSON template data to XML
+		 * @param	data Data to send to the template
+		 */
+		private function jsonToXml(data:String):String
+		{
+			try {
+				var obj:Object = JSON.parse(/{.*}/gs.exec(data));
+			}
+			catch (e:Error) 
+			{
+				return data;
+			}
+			var xmlData:String = "<templateData>";
+			for (var key:* in obj) {
+				xmlData += "<componentData id=\"" + xmlEncode(key) +"\"><data id=\"text\" value=\"" + xmlEncode(obj[key]) + "\" /></componentData>";
+			}
+			xmlData += "</templateData>";
+
+			return xmlData;
 		}
 	}
 }
