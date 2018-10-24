@@ -209,7 +209,10 @@ package se.svt.caspar.templateHost
 		public function SetData(layers:Array, xmlData:String):void 
 		{
 			onCommandRecieved("@SetData@" + layers.toString());
-			xmlData = jsonToXml(xmlData);
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new SetDataCommand(layers, new XML(xmlData), this));
 		}
 		
