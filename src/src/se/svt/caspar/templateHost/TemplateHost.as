@@ -52,6 +52,8 @@ package se.svt.caspar.templateHost
 	import se.svt.caspar.templateHost.externalCommands.SetDataCommand;
 	import se.svt.caspar.templateHost.externalCommands.StopCommand;
 	import se.svt.caspar.Version;
+	import utils.string.xmlEncode;
+	import utils.xml.isValidXML;
 
 	/**
 	 * ...
@@ -156,7 +158,11 @@ package se.svt.caspar.templateHost
 		public function Add(layer:int, templateName:String, playOnLoad:Boolean, invoke:String, xmlData:String):void 
 		{
 			//_legacyHost.Add(layer, templateName, playOnLoad, invoke, xmlData);
-			onCommandRecieved("@Add@" + layer);
+			onCommandReceived("@Add@" + layer);
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new AddCommand(layer, templateName, invoke, new XML(xmlData), new TemplateContext(_communicationManager, layer), this));
 			if (playOnLoad)
 			{
@@ -171,7 +177,7 @@ package se.svt.caspar.templateHost
 		public function Play(layers:Array):void 
 		{
 			//_legacyHost.Add(layers);
-			onCommandRecieved("@Play@" + layers.toString());
+			onCommandReceived("@Play@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new PlayCommand(layers, _templateContainer, this));
 		}
 		
@@ -182,7 +188,7 @@ package se.svt.caspar.templateHost
 		 */
 		public function Stop(layers:Array, mixOutDuration:uint):void 
 		{
-			onCommandRecieved("@Stop@" + layers.toString());
+			onCommandReceived("@Stop@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new StopCommand(layers, mixOutDuration, _templateContainer, this));
 		}
 	
@@ -192,7 +198,7 @@ package se.svt.caspar.templateHost
 		 */
 		public function Delete(layers:Array):void 
 		{
-			onCommandRecieved("@Delete@" + layers.toString());
+			onCommandReceived("@Delete@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new StopCommand(layers, 1, _templateContainer, this));
 		}
 		
@@ -203,7 +209,11 @@ package se.svt.caspar.templateHost
 		 */
 		public function SetData(layers:Array, xmlData:String):void 
 		{
-			onCommandRecieved("@SetData@" + layers.toString());
+			onCommandReceived("@SetData@" + layers.toString());
+			if (!isValidXML(xmlData))
+			{
+				xmlData = jsonToXml(xmlData);
+			}
 			_externalCommandsBuffer.addCommand(new SetDataCommand(layers, new XML(xmlData), this));
 		}
 		
@@ -213,7 +223,7 @@ package se.svt.caspar.templateHost
 		 */
 		public function Next(layers:Array):void 
 		{
-			onCommandRecieved("@Next@" + layers.toString());
+			onCommandReceived("@Next@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new NextCommand(layers, this));
 		}
 		
@@ -225,7 +235,7 @@ package se.svt.caspar.templateHost
 		 */
 		public function Invoke(layers:Array, label:String):void 
 		{
-			onCommandRecieved("@Invoke@" + layers.toString());
+			onCommandReceived("@Invoke@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new InvokeCommand(layers, label, this));
 		}
 		
@@ -235,7 +245,7 @@ package se.svt.caspar.templateHost
 		 */
 		public function GetDescription(layers:Array):String 
 		{
-			onCommandRecieved("@GetDescription@" + layers.toString());
+			onCommandReceived("@GetDescription@" + layers.toString());
 			_externalCommandsBuffer.addCommand(new GetDescriptionCommand(layers, this));
 			return "This function is asynchronous. The result is returned by the external call function OnTemplateDescription";
 		}	
@@ -246,7 +256,7 @@ package se.svt.caspar.templateHost
 		 */		
 		public function GetInfo():String 
 		{
-			onCommandRecieved("@GetInfo@?");
+			onCommandReceived("@GetInfo@?");
 			
 			//Build layer info xml
 			var infoXML:XML = new XML(<TemplateHostInfo version={Version.getVersion()} width={SCREEN_WIDTH} height={SCREEN_HEIGHT} fps={stage.frameRate} totalMemory={System.totalMemoryNumber} freeMemory={System.freeMemory} loadedTemplates={_loadedTemplates.numberOfLoadedTemplates}></TemplateHostInfo>);
@@ -375,19 +385,19 @@ package se.svt.caspar.templateHost
 		}
 		
 		/**
-		 * Sends an external call when a command is recieved by the template host
-		 * @param	command The command that is recieved
+		 * Sends an external call when a command is received by the template host
+		 * @param	command The command that is received
 		 */
-		private function onCommandRecieved(command:String):void
+		private function onCommandReceived(command:String):void
 		{
 			if (ExternalInterface.available)
 			{
-				trace("\n =>TEMPLATE HOST: OnCommandRecieved: " + command.toString());
-				ExternalInterface.call("OnCommand", "Command recieved " + (command + "@"));
+				trace("\n =>TEMPLATE HOST: OnCommandReceived: " + command.toString());
+				ExternalInterface.call("OnCommand", "Command received " + (command + "@"));
 			}
 			else
 			{
-				trace("ExternalInterface.call OnCommand: Command recieved: " + command);
+				trace("ExternalInterface.call OnCommand: Command received: " + command);
 			}
 		}
 		
@@ -411,7 +421,7 @@ package se.svt.caspar.templateHost
 		//TODO: Implement
 		/**
 		 * Sends an external call from a template
-		 * @param command The command that is recieved
+		 * @param command The command that is received
 		 */
 		// TO BE IMPLEMENTED
 		private function onExternalCall(e:CasparTemplateEvent):void
@@ -733,6 +743,28 @@ package se.svt.caspar.templateHost
 				}
 				catch (e:Error)	{ }
 			}
+		}
+		
+		/**
+		 * Converts JSON template data to XML
+		 * @param	data Data to send to the template
+		 */
+		private function jsonToXml(data:String):String
+		{
+			try {
+				var obj:Object = JSON.parse(/{.*}/gs.exec(data));
+			}
+			catch (e:Error) 
+			{
+				return data;
+			}
+			var xmlData:String = "<templateData>";
+			for (var key:* in obj) {
+				xmlData += "<componentData id=\"" + xmlEncode(key) +"\"><data id=\"text\" value=\"" + xmlEncode(obj[key]) + "\" /></componentData>";
+			}
+			xmlData += "</templateData>";
+
+			return xmlData;
 		}
 	}
 }

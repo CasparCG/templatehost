@@ -88,7 +88,7 @@ package se.svt.caspar.templateHost.adapters
 		/* INTERFACE se.svt.caspar.template.ICasparTemplate */
 		
 		/**
-		 * Will dispatch a "remove template"-event which will be recieved by the template host and will mark the template for destruction. Is called by the standard implementarion of Stop() if there is no label called "outro". If there is an "outro"-label brew will insert a call to removeTemplate() on the first keyframe containing stop() after the "outro"-labelled keyframe, if none, on the last frame. If the standard implementation of Stop() overridden this method MUST be called manually.
+		 * Will dispatch a "remove template"-event which will be received by the template host and will mark the template for destruction. Is called by the standard implementarion of Stop() if there is no label called "outro". If there is an "outro"-label brew will insert a call to removeTemplate() on the first keyframe containing stop() after the "outro"-labelled keyframe, if none, on the last frame. If the standard implementation of Stop() overridden this method MUST be called manually.
 		 */
 		public final function removeTemplate(template:*):void
 		{
