@@ -29,7 +29,8 @@ package se.svt.caspar.template {
 	import se.svt.caspar.ICommunicationManager;
 	import se.svt.caspar.ITemplateContext;
 	import se.svt.caspar.template.components.ComponentAssets;
-	import se.svt.caspar.template.components.ICasparComponent;	
+	import se.svt.caspar.template.components.ICasparComponent;
+	import utils.string.htmlDecode;
 	
 	/**
 	 * ...
@@ -85,7 +86,7 @@ package se.svt.caspar.template {
 		}
 		
 		/**
-		 * Will dispatch a "remove template"-event which will be recieved by the template host and will mark the template for destruction. Is called by the standard implementarion of Stop() if there is no label called "outro". If there is an "outro"-label brew will insert a call to removeTemplate() on the first keyframe containing stop() after the "outro"-labelled keyframe, if none, on the last frame. If the standard implementation of Stop() overridden this method MUST be called manually.
+		 * Will dispatch a "remove template"-event which will be received by the template host and will mark the template for destruction. Is called by the standard implementarion of Stop() if there is no label called "outro". If there is an "outro"-label brew will insert a call to removeTemplate() on the first keyframe containing stop() after the "outro"-labelled keyframe, if none, on the last frame. If the standard implementation of Stop() overridden this method MUST be called manually.
 		 */
 		protected final function removeTemplate():void
 		{
@@ -216,11 +217,18 @@ package se.svt.caspar.template {
 		{
 			try
 			{
-				this[methodName].call();
+				var pattern:RegExp = /(\b[^()]+)(?:\((.*)\))?$/g;
+				var result:Object = pattern.exec(methodName);
+				if (result[2]) {
+					var values:Object = JSON.parse("[" + htmlDecode(result[2]) + "]");
+					this[result[1]].apply(this, values);
+				} else {
+					this[result[1]].call();
+				}
 			}
 			catch (e:Error)
 			{
-				throw new ReferenceError("The method " + methodName + " was not found on layer " + layer);
+				throw new ReferenceError("The method " + methodName + " was not found on layer " + layer + " or it returned an error.");
 			}
 		}
 		
