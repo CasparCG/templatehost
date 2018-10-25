@@ -4,10 +4,10 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\cg20.fth.ntsc" />
+    <movie path="bin\cg22.fth.720p5994" />
     <movie fps="60" />
-    <movie width="720" />
-    <movie height="540" />
+    <movie width="1280" />
+    <movie height="720" />
     <movie version="11" />
     <movie minorVersion="8" />
     <movie platform="Flash Player" />

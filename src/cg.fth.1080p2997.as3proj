@@ -4,10 +4,10 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\cg20.fth.pal.43" />
-    <movie fps="50" />
-    <movie width="768" />
-    <movie height="576" />
+    <movie path="bin\cg22.fth.1080p2997" />
+    <movie fps="60" />
+    <movie width="1920" />
+    <movie height="1080" />
     <movie version="11" />
     <movie minorVersion="8" />
     <movie platform="Flash Player" />
@@ -15,8 +15,8 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="..\dependencies" />
     <class path="src" />
+    <class path="..\dependencies" />
   </classpaths>
   <!-- Build options -->
   <build>
