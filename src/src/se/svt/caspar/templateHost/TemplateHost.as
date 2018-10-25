@@ -70,7 +70,7 @@ package se.svt.caspar.templateHost
 		private var ORIGINAL_FRAMERATE:int;
 
 		// Container for all loaded templates
-		private var _templateContainer:Sprite = new Sprite();	
+		private var _templateContainer:Sprite = new Sprite();
 		//keeps track of number of templates loaded with full / half framerame
 		private var _nFullFramerateCounter:int = 0; 
 		private var _nHalfFramerateCounter:int = 0;
@@ -133,7 +133,8 @@ package se.svt.caspar.templateHost
 			this.addEventListener(CommandEvent.COMMAND_FINISHED, onCommandFinished);
 			this.addEventListener(CommandEvent.ON_ERROR, onTemplateHostError);
 			_externalCommandsBuffer.addEventListener(CommandEvent.DEBUG_MESSAGE, onDebugLog);
-			
+
+			_templateContainer.cacheAsBitmap = true;
 			addChild(_templateContainer);
 			
 			//Listen for uncaught errors
