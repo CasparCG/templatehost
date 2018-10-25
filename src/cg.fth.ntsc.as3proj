@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\cg20.fth.ntsc" />
+    <movie path="bin\cg22.fth.ntsc" />
     <movie fps="60" />
     <movie width="720" />
     <movie height="540" />
